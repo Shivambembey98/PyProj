@@ -39,4 +39,33 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+          script: |
+            # Navigate to home directory
+            cd ~
+
+            # Ensure Docker is installed
+            if ! command -v docker &> /dev/null; then
+              echo "Docker is not installed. Installing..."
+              sudo apt update
+              sudo apt install -y docker.io
+              sudo systemctl start docker
+              sudo systemctl enable docker
+              sudo usermod -aG docker $USER
+            fi
+            
+            # Remove old container if it exists
+            docker stop python-cli-app || true
+            docker rm python-cli-app || true
+
+            # Remove old image
+            docker rmi python-cli-app || true
+
+            # Pull latest code (if applicable)
+            cd ~/python-cli-app || git clone https://github.com/Shivambembey98/PyProj.git ~/python-cli-app
+            cd ~/python-cli-app
+            git pull origin main
+
+            # Build and run the container
+            docker build -t python-cli-app .
+            docker run -d --name python-cli-app python-cli-app
           

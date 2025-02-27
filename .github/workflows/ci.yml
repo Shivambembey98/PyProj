@@ -1,7 +1,7 @@
 name: CI Pipeline
 
 on:
-  workflow-dispatch
+  workflow-dispatch:
 
 jobs:
   test:

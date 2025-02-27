@@ -39,10 +39,4 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script: |
-            cd ~/python-cli-app
-            git pull origin main
-            docker stop python-cli-app || true
-            docker rm python-cli-app || true
-            docker build -t python-cli-app .
-            docker run -it python-cli-app
+          
